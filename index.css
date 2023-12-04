@@ -1,0 +1,69 @@
+/*.center {
+  border: 5px solid;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+}*/
+
+.center {
+  padding: 70px 0;
+  text-align: center;
+  background-color: black;
+}
+
+body {
+  background-color: black;
+  /*animation: flicker 8s;
+  animation-iteration-count: infinite;*/
+}
+
+.title-text {
+  background: -webkit-linear-gradient(0deg, #515559 0%, #131415 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: flicker 8s;
+  animation-iteration-count: infinite;
+}
+
+.button-text {
+  background: -webkit-linear-gradient(0deg, #515559 0%, #212529 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: flicker 8s;
+  animation-iteration-count: infinite;
+}
+
+#button-div {
+  width: 200px;
+  height: 100px;
+  background: #212529;
+  transition: background-color 2s ease-out 100ms
+}
+
+#button-div:hover {
+  background-color: #000000;
+}
+
+.fade-in-element { animation: fadeIn 2s; }
+
+@keyframes fadeIn {
+  0% { opacity: 0.4; }
+  100% { opacity: 0.4; }
+}
+
+.fade-in-element:hover { animation: fadeOut 4s; }
+
+@keyframes fadeOut {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+@keyframes flicker {
+  0% { opacity: 1 }
+  20% { opacity: 0.6 }
+  30% { opacity: 0.8 }
+  100% { opacity 1 }
+}
