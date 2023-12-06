@@ -1,4 +1,5 @@
 function Game() {
+    console.log("initializing a game");
     this.player1 = new Player();
     this.player2 = new Player();
     this.alwaysVisiblePlayers = true;
@@ -12,6 +13,8 @@ function Player(x, y) {
     this.state = 0;
     this.deltaX = 0;
     this.deltaY = 0;
+    this.luminstion = false;
+    this.shoot = false;
 }
 
 function generateBoard() {
@@ -19,7 +22,8 @@ function generateBoard() {
 }
 
 function handleUpdatePlayerState(game, data) {
-    console.log(data);
+    //...
+    //console.log(data.code);
 }
 
 function test() {

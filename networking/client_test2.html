@@ -21,7 +21,7 @@
             joinRoom(socket, $("#room-code").val());
         });
         $("#send-updates").on('click', function () {
-            sendPlayerPosition(socket, $("#room-code").val(), {name: "player1", x: 5, y: 4, deltaX: 0, deltaY: 0, lumination: false, shoot: false});
+            sendPlayerPosition(socket, roomCode, {name: "player1", x: 5, y: 4, deltaX: 0, deltaY: 0, lumination: false, shoot: false});
         });
     });
     </script>
