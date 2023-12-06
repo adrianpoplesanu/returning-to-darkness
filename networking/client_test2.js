@@ -44,7 +44,7 @@ function handleMessage(message) {
         console.log(data.code);
     }
     if (data.state == 'GAME_START') {
-        //... start the game
+        console.log("start the game already");
     }
     if (data.state == 'UPDATE') {
         //... update game state

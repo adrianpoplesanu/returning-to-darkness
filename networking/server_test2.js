@@ -1,3 +1,4 @@
+const game = require("./server_game2");
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 9090 });
 
@@ -57,12 +58,14 @@ function handle_create_room(ws, code) {
 function handle_join_room(ws, code) {
     rooms[code].player2_ws = ws;
     const payload = {"state": "GAME_START", "code": code};
+    var game = Game();
+    rooms[code].game = game;
     sendMessage(rooms[code].player1_ws, JSON.stringify(payload));
     sendMessage(rooms[code].player2_ws, JSON.stringify(payload));
 }
 
 function handle_update_room(ws, data) {
-    console.log(data);
+    game.handleUpdatePlayerState(data.data);
 }
 
 function sendMessage(ws, message) {
