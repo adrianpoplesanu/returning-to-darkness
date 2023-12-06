@@ -1,12 +1,29 @@
 <html>
 <head>
-    <script src="client_test2.js"></script>
+    <script src="../libs/jquery-3.7.1.js"></script>
+    <link rel="stylesheet" href="../libs/bootstrap.min.css"/>
+    <script src="../libs/bootstrap.min.js"></script>
 </head>
 <body>
-    <button>create room</button>
+    <button id="create-room">create room</button>
     <input id="room-code"></input>
-    <button>join room</button>
+    <button id="join-room">join room</button>
     <input id="player-update"></input>
-    <button>send updates</button>
+    <button id="send-updates">send updates</button>
+    <script src="client_test2.js"></script>
+    <script>
+    $(document).ready(function () {
+        //console.log("aaa");
+        $("#create-room").on('click', function () {
+            createRoom(socket);
+        });
+        $("#join-room").on('click', function () {
+            joinRoom(socket, $("#room-code").val());
+        });
+        $("#send-updates").on('click', function () {
+            sendPlayerPosition(socket, $("#room-code").val(), {x: 5, y: 4});
+        });
+    });
+    </script>
 </body>
 </html>
