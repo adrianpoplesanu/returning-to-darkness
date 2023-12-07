@@ -13,8 +13,17 @@ function Player(x, y) {
     this.state = 0;
     this.deltaX = 0;
     this.deltaY = 0;
-    this.luminstion = false;
+    this.lumination = false;
     this.shoot = false;
+}
+
+function Bullet() {
+    this.name = ""; // player1 or player2
+    this.x = 0;
+    this.y = 0;
+    this.deltaX = 0;
+    this.deltaY = 0;
+    this.state = 0;
 }
 
 function generateBoard() {
@@ -24,6 +33,7 @@ function generateBoard() {
 function handleUpdatePlayerState(game, data) {
     //...
     //console.log(data.code);
+
 }
 
 function test() {

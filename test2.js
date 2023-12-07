@@ -31,12 +31,12 @@ var escapeKey = 27;
 var controlKey = 17;
 var movementKey;
 
-var enemyX;
-var enemyY;
-var enemyOrientation;
-var enemyDeltaX;
-var enemyDeltaY;
-var enemyState;
+var enemyX = 10;
+var enemyY = 10;
+var enemyOrientation = 0;
+var enemyDeltaX = 0;
+var enemyDeltaY = 0;
+var enemyState = 0;
 
 var myOrientation = 0; // 0 - up, 1 - left, 2 - down, 3 - right
 
@@ -83,11 +83,12 @@ function handleInput() {
         moveRight();
     }
     if (keystate[spaceKey]) {
-        triggerLumination();
-    }
-    if (keystate[controlKey]) {
+        //triggerLumination();
         triggerShoot();
     }
+    /*if (keystate[controlKey]) {
+        triggerShoot();
+    }*/
 }
 
 function canMove(deltaX, deltaY) {
@@ -131,6 +132,14 @@ function moveRight() {
 function clearScreen() {
     context.fillStyle = 'black';
     context.fillRect(0, 0, width, height);
+}
+
+function initializeEnemy() {
+    enemy.state = 0;
+    enemy.x = 10;
+    enemy.y = 10;
+    enemy.deltaX = 0;
+    enemy.deltaY = 0;
 }
 
 function testImageRendering(x, y, alpha) {
@@ -264,20 +273,20 @@ function drawPlayer() {
         tileSize - 4
     );
     if (myOrientation == 0) {
-        drawPlayerGun(8, 0, "rgba(255, 140, 0, 1)");
+        drawPlayerGun(player, 8, 0, "rgba(255, 140, 0, 1)");
     }
     if (myOrientation == 1) {
-        drawPlayerGun(0, 8, "rgba(255, 140, 0, 1)");
+        drawPlayerGun(player, 0, 8, "rgba(255, 140, 0, 1)");
     }
     if (myOrientation == 2) {
-        drawPlayerGun(8, 16, "rgba(255, 140, 0, 1)");
+        drawPlayerGun(player, 8, 16, "rgba(255, 140, 0, 1)");
     }
     if (myOrientation == 3) {
-        drawPlayerGun(16, 8, "rgba(255, 140, 0, 1)");
+        drawPlayerGun(player, 16, 8, "rgba(255, 140, 0, 1)");
     }
 }
 
-function drawPlayerGun(offsetX, offsetY, color) {
+function drawPlayerGun(player, offsetX, offsetY, color) {
     var oldStrokeStyle = context.strokeStyle;
     context.strokeStyle = color;
     var oldWidth = context.lineWidth;
@@ -299,29 +308,29 @@ function drawPlayerGun(offsetX, offsetY, color) {
 function drawEnemy() {
     context.fillStyle = "rgba(255, 140, 255, 1)";
     context.fillRect(
-        player.x * tileSize + (maxState / moveFactor - player.state) * player.deltaX * moveFactor,
-        player.y * tileSize + (maxState / moveFactor - player.state) * player.deltaY * moveFactor,
+        enemy.x * tileSize + (maxState / moveFactor - enemy.state) * enemy.deltaX * moveFactor,
+        enemy.y * tileSize + (maxState / moveFactor - enemy.state) * enemy.deltaY * moveFactor,
         tileSize,
         tileSize
     );
     context.fillStyle = "rgba(0, 0, 0, 1)";
     context.fillRect(
-        player.x * tileSize + (maxState / moveFactor - player.state) * player.deltaX * moveFactor + 2,
-        player.y * tileSize + (maxState / moveFactor - player.state) * player.deltaY * moveFactor + 2,
+        enemy.x * tileSize + (maxState / moveFactor - enemy.state) * enemy.deltaX * moveFactor + 2,
+        enemy.y * tileSize + (maxState / moveFactor - enemy.state) * enemy.deltaY * moveFactor + 2,
         tileSize - 4,
         tileSize - 4
     );
     if (enemyOrientation == 0) {
-        drawPlayerGun(8, 0, "rgba(255, 140, 0, 1)");
+        drawPlayerGun(enemy, 8, 0, "rgba(255, 140, 0, 1)");
     }
     if (enemyOrientation == 1) {
-        drawPlayerGun(0, 8, "rgba(255, 140, 0, 1)");
+        drawPlayerGun(enemy, 0, 8, "rgba(255, 140, 0, 1)");
     }
     if (enemyOrientation == 2) {
-        drawPlayerGun(8, 16, "rgba(255, 140, 0, 1)");
+        drawPlayerGun(enemy, 8, 16, "rgba(255, 140, 0, 1)");
     }
     if (enemyOrientation == 3) {
-        drawPlayerGun(16, 8, "rgba(255, 140, 0, 1)");
+        drawPlayerGun(enemy, 16, 8, "rgba(255, 140, 0, 1)");
     }
 }
 
@@ -399,6 +408,14 @@ function Player() {
     this.deltaY = 0;
 }
 
+function Bullet() {
+    this.state = 0;
+    this.x = 1;
+    this.y = 1;
+    this.deltaX = 0;
+    this.deltaY = 0;
+}
+
 function GameLoop() {
 
 }
@@ -425,6 +442,7 @@ Game.prototype.start = function () {
     }
     generateBoard(boardWidth, boardHeight);
     generateLuminationBoard(boardWidth, boardHeight);
+    initializeEnemy();
     game.update();
 }
 
@@ -444,5 +462,8 @@ Game.prototype.update = function () {
 }
 
 var game = new Game();
-var player = new Player();
+var player = new Player
+var enemy = new Player();
+var myBullet = new Bullet();
+var enemyBullet = new Bullet();
 game.start();
