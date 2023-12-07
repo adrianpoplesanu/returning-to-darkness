@@ -42,7 +42,7 @@ var myOrientation = 0; // 0 - up, 1 - left, 2 - down, 3 - right
 
 var keystate = {};
 
-var playerX, playerY, opponentX, opponentY;
+var playerX, playerY, opponentX, opponentY, isShooting = false;
 
 window.addEventListener("keydown", function(e) {
     // space and arrow keys
@@ -93,8 +93,21 @@ function handleInput() {
 
 function canMove(deltaX, deltaY) {
     if (player.state > 0) return false;
-    if (board[player.x + deltaX][player.y + deltaY].type == 0) return true;
+    if (board[player.x + player.deltaX][player.y + player.deltaY].type == 0) return true;
     return false;
+}
+
+function sendMove() {
+    sendPlayerPosition(socket, roomCode, {
+        name: myId,
+        x: player.x,
+        y: player.y,
+        deltaX: player.deltaX,
+        deltaY: player.deltaY,
+        orientation: myOrientation,
+        lumination: false,
+        shoot: false
+    });
 }
 
 function moveDown() {
@@ -102,6 +115,7 @@ function moveDown() {
         player.deltaY = 1;
         myOrientation = 2;
         player.state = maxState / moveFactor;
+        sendMove();
     }
 }
 
@@ -110,6 +124,7 @@ function moveUp() {
         player.deltaY = -1;
         myOrientation = 0;
         player.state = maxState / moveFactor;
+        sendMove();
     }
 }
 
@@ -118,6 +133,7 @@ function moveLeft() {
         player.deltaX = -1;
         myOrientation = 1;
         player.state = maxState / moveFactor;
+        sendMove();
     }
 }
 
@@ -126,6 +142,7 @@ function moveRight() {
         player.deltaX = 1;
         myOrientation = 3;
         player.state = maxState / moveFactor;
+        sendMove();
     }
 }
 
@@ -257,6 +274,29 @@ function movePlayer() {
     }
 }
 
+function moveEnemy() {
+    if (enemy.state > 0) {
+        enemy.state--;
+    }
+    if (enemy.state == 0) {
+        enemy.x += enemy.deltaX;
+        enemy.y += enemy.deltaY;
+        enemy.deltaX = 0;
+        enemy.deltaY = 0;
+    }
+}
+
+function moveMyBullet() {
+    if (!myBullet.active) return;
+    if (myBullet.state > 0) {
+        myBullet.state--;
+    }
+    if (myBullet.state == 0) {
+        myBullet.x += myBullet.deltaX;
+        myBullet.y += myBullet.deltaY;
+    }
+}
+
 function drawPlayer() {
     context.fillStyle = "rgba(255, 255, 255, 1)";
     context.fillRect(
@@ -306,7 +346,7 @@ function drawPlayerGun(player, offsetX, offsetY, color) {
 }
 
 function drawEnemy() {
-    context.fillStyle = "rgba(255, 140, 255, 1)";
+    context.fillStyle = "rgba(255, 140, 0, 1)";
     context.fillRect(
         enemy.x * tileSize + (maxState / moveFactor - enemy.state) * enemy.deltaX * moveFactor,
         enemy.y * tileSize + (maxState / moveFactor - enemy.state) * enemy.deltaY * moveFactor,
@@ -320,18 +360,53 @@ function drawEnemy() {
         tileSize - 4,
         tileSize - 4
     );
-    if (enemyOrientation == 0) {
-        drawPlayerGun(enemy, 8, 0, "rgba(255, 140, 0, 1)");
+    if (enemy.orientation == 0) {
+        drawPlayerGun(enemy, 8, 0, "rgba(255, 255, 255, 1)");
     }
-    if (enemyOrientation == 1) {
-        drawPlayerGun(enemy, 0, 8, "rgba(255, 140, 0, 1)");
+    if (enemy.orientation == 1) {
+        drawPlayerGun(enemy, 0, 8, "rgba(255, 255, 255, 1)");
     }
-    if (enemyOrientation == 2) {
-        drawPlayerGun(enemy, 8, 16, "rgba(255, 140, 0, 1)");
+    if (enemy.orientation == 2) {
+        drawPlayerGun(enemy, 8, 16, "rgba(255, 255, 255, 1)");
     }
-    if (enemyOrientation == 3) {
-        drawPlayerGun(enemy, 16, 8, "rgba(255, 140, 0, 1)");
+    if (enemy.orientation == 3) {
+        drawPlayerGun(enemy, 16, 8, "rgba(255, 255, 255, 1)");
     }
+}
+
+function drawMyBullet() {
+    if (!myBullet.active) return;
+    if(myBullet.orientation == 0) {
+        drwBullet(myBullet, 8, 0, "rgba(255, 140, 0, 1)");
+    }
+    if(myBullet.orientation == 1) {
+        drwBullet(myBullet, 0, 8, "rgba(255, 140, 0, 1)");
+    }
+    if(myBullet.orientation == 2) {
+        drwBullet(myBullet, 8, 16, "rgba(255, 140, 0, 1)");
+    }
+    if(myBullet.orientation == 3) {
+        drwBullet(myBullet, 16, 8, "rgba(255, 140, 0, 1)");
+    }
+}
+
+function drawBullet(bullet, offsetX, offsetY, color) {
+    var oldStrokeStyle = context.strokeStyle;
+    context.strokeStyle = color;
+    var oldWidth = context.lineWidth;
+    context.lineWidth = 4;
+    context.beginPath();
+    context.moveTo(
+        bullet.x * tileSize + (maxState / moveFactor - bullet.state) * bullet.deltaX * moveFactor + 8,
+        bullet.y * tileSize + (maxState / moveFactor - bullet.state) * bullet.deltaY * moveFactor + 8
+    );
+    context.lineTo(
+        bullet.x * tileSize + (maxState / moveFactor - bullet.state) * bullet.deltaX * moveFactor + offsetX,
+        bullet.y * tileSize + (maxState / moveFactor - bullet.state) * bullet.deltaY * moveFactor + offsetY
+    );
+    context.stroke();
+    context.strokeStyle = oldStrokeStyle;
+    context.lineWidth = oldWidth;
 }
 
 function canLuminate(i, j) {
@@ -382,8 +457,41 @@ function triggerLumination() {
     //console.log("lumination");
 }
 
+function canShoot() {
+    return !isShooting;
+}
+
 function triggerShoot() {
-    console.log("shoot");
+    if (canShoot()) {
+        console.log("shooting");
+        myBullet.x = player.x;
+        myBullet.y = player.y;
+        isShooting = true;
+        if (player.orientation == 0) {
+            myBullet.active = true;
+            myBullet.deltaX = 0;
+            myBullet.deltaY = -1;
+            myBullet.state = 4; // TODO: fix this
+        }
+        if (player.orientation == 0) {
+            myBullet.active = true;
+            myBullet.deltaX = -1;
+            myBullet.deltaY = 0;
+            myBullet.state = 4; // TODO: fix this
+        }
+        if (player.orientation == 0) {
+            myBullet.active = true;
+            myBullet.deltaX = 0;
+            myBullet.deltaY = 1;
+            myBullet.state = 4; // TODO: fix this
+        }
+        if (player.orientation == 0) {
+            myBullet.active = true;
+            myBullet.deltaX = 1;
+            myBullet.deltaY = 0;
+            myBullet.state = 4; // TODO: fix this
+        }
+    }
 }
 
 function startLumination() {
@@ -400,6 +508,15 @@ function startLumination() {
     }
 }
 
+function sendTriggerShoot() {
+    sendPlayerShoot(socket, roomCode, {
+        name: myId,
+        x: player.x,
+        y: player.y,
+        orientation: orientation
+    });
+}
+
 function Player() {
     this.state = 0;
     this.x = 1;
@@ -409,6 +526,7 @@ function Player() {
 }
 
 function Bullet() {
+    this.active = false;
     this.state = 0;
     this.x = 1;
     this.y = 1;
@@ -455,8 +573,11 @@ Game.prototype.update = function () {
     handleInput();
     drawBoard();
     movePlayer();
+    moveEnemy();
+    moveMyBullet();
     drawPlayer();
     drawEnemy();
+    drawMyBullet();
     updateLumination();
     window.requestAnimationFrame(game.update);
 }
@@ -467,3 +588,13 @@ var enemy = new Player();
 var myBullet = new Bullet();
 var enemyBullet = new Bullet();
 game.start();
+
+/*
+ce mai am de facut:
+spawn points - server side
+bullet movement & draw & physics - client side & server side
+
+deploy amazon
+deploy adrianus.ro
+incorporate in index.html + flow de dinainte de game
+*/

@@ -33,6 +33,11 @@ function sendPlayerPosition(socket, code, data) {
     socket.send(JSON.stringify(payload));
 }
 
+function sendPlayerShoot(socket, code, data) {
+    const payload = {"state": "SHOOT", "code": code, "data": data};
+    socket.send(JSON.stringify(payload));
+}
+
 function joinRoom(socket, code) {
     console.log("joining room");
     console.log(code);
@@ -50,9 +55,22 @@ function handleMessage(message) {
     if (data.state == 'GAME_START') {
         console.log("start the game already");
         roomCode = data.code;
+        myId = data.id;
+        player.x = data.x;
+        player.y = data.y;
+        myOrientation = data.playerOrientation;
+        enemy.x = data.enemyX;
+        enemy.y = data.enemyY;
+        enemy.orientation = data.enemyOrientation;
     }
     if (data.state == 'UPDATE') {
-        //... update game state
+        //console.log(data.enemy);
+        enemy.x = data.enemy.x;
+        enemy.y = data.enemy.y;
+        enemy.deltaX = data.enemy.deltaX;
+        enemy.deltaY = data.enemy.deltaY;
+        enemy.orientation = data.enemy.orientation;
+        enemy.state = 8; // TODO: fix this
     }
 }
 

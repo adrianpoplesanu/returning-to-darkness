@@ -2,6 +2,8 @@ function Game() {
     console.log("initializing a game");
     this.player1 = new Player();
     this.player2 = new Player();
+    this.player1Bullet = new Bullet();
+    this.plauer2Bullet = new Bullet();
     this.alwaysVisiblePlayers = true;
     this.board = generateBoard();
 }
@@ -30,10 +32,44 @@ function generateBoard() {
     //...
 }
 
-function handleUpdatePlayerState(game, data) {
-    //...
-    //console.log(data.code);
+function handleUpdatePlayerState(room, data) {
+    var myId = data.name;
+    if (myId == "player1") {
+        var payload = {
+            state: "UPDATE",
+            enemy: {
+                name: "player1",
+                x: data.x,
+                y: data.y,
+                deltaX: data.deltaX,
+                deltaY: data.deltaY,
+                orientation: data.orientation,
+                lumination: false,
+                shoot: false
+            }
+        };
+        sendClientUpdate(room.player2_ws, payload);
+    }
+    if (myId == "player2") {
+        var payload = {
+            state: "UPDATE",
+            enemy: {
+                name: "player2",
+                x: data.x,
+                y: data.y,
+                deltaX: data.deltaX,
+                deltaY: data.deltaY,
+                orientation: data.orientation,
+                lumination: false,
+                shoot: false
+            }
+        };
+        sendClientUpdate(room.player1_ws, payload);
+    }
+}
 
+function sendClientUpdate(ws, payload) {
+    ws.send(JSON.stringify(payload));
 }
 
 function test() {
