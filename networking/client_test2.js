@@ -2,6 +2,7 @@ console.log("running client_test2.js...");
 
 const socket = new WebSocket("ws://localhost:9090");
 var roomCode;
+var myId;
 
 socket.addEventListener("open", (event) => {
     initializeConnection(socket);
@@ -44,6 +45,7 @@ function handleMessage(message) {
     if (data.state == 'ROOM_CREATED') {
         console.log(data.code);
         roomCode = data.code;
+        myId = data.id;
     }
     if (data.state == 'GAME_START') {
         console.log("start the game already");

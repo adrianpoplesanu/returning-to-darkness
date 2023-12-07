@@ -1,13 +1,39 @@
 <html>
 <head>
-    <title>Game engine work</title>
+    <title>Returning to darkness</title>
+    <script src="libs/jquery-3.7.1.js"></script>
+    <link rel="stylesheet" href="libs/bootstrap.min.css"/>
+    <script src="libs/bootstrap.min.js"></script>
 </head>
     <img style="display: none;" src="png/tile1.png" id="tile1"></img>
     <img style="display: none;" src="png/tile2.png" id="tile2"></img>
     <img style="display: none;" src="png/small-tile.png" id="small-tile1"></img>
     <img style="display: none;" src="png/margin-tile.png" id="margin-tile"></img>
+
+    <button id="create-room">create room</button>
+    <input id="room-code"></input>
+    <button id="join-room">join room</button>
+    <input id="player-update"></input>
+    <button id="send-updates">send updates</button>
+
+    <script>
+    $(document).ready(function () {
+        //console.log("aaa");
+        $("#create-room").on('click', function () {
+            createRoom(socket);
+        });
+        $("#join-room").on('click', function () {
+            joinRoom(socket, $("#room-code").val());
+        });
+        $("#send-updates").on('click', function () {
+            sendPlayerPosition(socket, roomCode, {name: "player1", x: 5, y: 4, deltaX: 0, deltaY: 0, lumination: false, shoot: false});
+        });
+    });
+    </script>
+
     <div id="game-output">
         <canvas id="canvas" width="1020" height="780"></canvas>
     </div>
+    <script src="networking/client_test2.js"></script>
     <script src="test2.js"></script>
 </html>

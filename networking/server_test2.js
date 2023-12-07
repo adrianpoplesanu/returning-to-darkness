@@ -57,11 +57,12 @@ function handle_create_room(ws, code) {
 
 function handle_join_room(ws, code) {
     rooms[code].player2_ws = ws;
-    const payload = {"state": "GAME_START", "code": code};
+    const payload1 = {"state": "GAME_START", "code": code, "id": "player1", x: 1, y: 1};
+    const payload2 = {"state": "GAME_START", "code": code, "id": "player2", x: 10, y: 10};
     var game1 = new game.Game();
     rooms[code].game = game1;
-    sendMessage(rooms[code].player1_ws, JSON.stringify(payload));
-    sendMessage(rooms[code].player2_ws, JSON.stringify(payload));
+    sendMessage(rooms[code].player1_ws, JSON.stringify(payload1));
+    sendMessage(rooms[code].player2_ws, JSON.stringify(payload2));
 }
 
 function handle_update_room(ws, data) {

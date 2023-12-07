@@ -31,6 +31,13 @@ var escapeKey = 27;
 var controlKey = 17;
 var movementKey;
 
+var enemyX;
+var enemyY;
+var enemyOrientation;
+var enemyDeltaX;
+var enemyDeltaY;
+var enemyState;
+
 var myOrientation = 0; // 0 - up, 1 - left, 2 - down, 3 - right
 
 var keystate = {};
@@ -141,32 +148,26 @@ function renderMargin(x, y, tileSize) {
 }
 
 function renderTile(x, y, tileSize) {
-    //const img = document.getElementById("small-tile1");
     const img = document.getElementById("tile2");
-    //for (var i = 0; i < 4; i++) {
-    //    for (var j = 0; j < 4; j++) {
-    //        var alpha = 0.2;
-            context.globalAlpha = 0.2 + 0.8 * (luminationBoard[x][y] / maxLuminationStep);
+    context.globalAlpha = 0.2 + 0.8 * (luminationBoard[x][y] / maxLuminationStep);
 
-            /*if (luminationBoard[x][y] != 0) {
-                var distance = Math.floor(Math.sqrt(Math.abs(luminationX - x) ^ 2 + Math.abs(luminationY - y) ^ 2));
-                //console.log(distance);
-                context.globalAlpha = 0.2 + 0.8 * (luminationBoard[x][y] / maxLuminationStep) - distance / 10;
-            } else {
-                context.globalAlpha = 0;
-            }*/
-            if (context.globalAlpha < 0) {
-                context.globalAlpha = 0;
-            }
-            context.globalAlpha /= 2.4;
-            if (context.globalAlpha > 1) {
-                console.log("err");
-            }
-            //context.drawImage(img, x * tileSize + i * 4, y * tileSize + j * 4, 4, 4);
-            context.drawImage(img, x * tileSize, y * tileSize, 16, 16);
-            context.globalAlpha = 1;
-    //    }
-    //}
+    /*if (luminationBoard[x][y] != 0) {
+        var distance = Math.floor(Math.sqrt(Math.abs(luminationX - x) ^ 2 + Math.abs(luminationY - y) ^ 2));
+        //console.log(distance);
+        context.globalAlpha = 0.2 + 0.8 * (luminationBoard[x][y] / maxLuminationStep) - distance / 10;
+    } else {
+        context.globalAlpha = 0;
+    }*/
+    if (context.globalAlpha < 0) {
+        context.globalAlpha = 0;
+    }
+    context.globalAlpha /= 2.4;
+    if (context.globalAlpha > 1) {
+        console.log("err");
+    }
+    //context.drawImage(img, x * tileSize + i * 4, y * tileSize + j * 4, 4, 4);
+    context.drawImage(img, x * tileSize, y * tileSize, 16, 16);
+    context.globalAlpha = 1;
 }
 
 function generateTile(x, y) {
@@ -214,25 +215,8 @@ function drawSquare(element) {
     var blue = 0;
     var lumination = element.alpha;
     if (element.type == 27) {
-        /*red = 77;
-        green = 77;
-        blue = 77;*/
-        /*red = 50;
-        green = 5;
-        blue = 5;
-
-        context.fillStyle = "rgba(" + red + ", " + green + ", " + blue + ", " + lumination + ")";
-        context.fillRect(element.x * tileSize, element.y * tileSize, tileSize, tileSize);*/
         renderMargin(element.x, element.y, tileSize);
     }
-    /*if (element.type == 0) {
-        red = 0;
-        green = 0;
-        blue = 0;
-
-        context.fillStyle = "rgba(" + red + ", " + green + ", " + blue + ", " + lumination + ")";
-        context.fillRect(element.x * tileSize, element.y * tileSize, tileSize, tileSize);
-    }*/
     if (element.type == 0) {
         renderTile(element.x, element.y, tileSize);
     }
@@ -280,22 +264,64 @@ function drawPlayer() {
         tileSize - 4
     );
     if (myOrientation == 0) {
-        var oldStrokeStyle = context.strokeStyle;
-        context.strokeStyle = "rgba(255, 140, 0, 1)";
-        var oldWidth = context.lineWidth;
-        context.lineWidth = 4;
-        context.beginPath();
-        context.moveTo(
-            player.x * tileSize + (maxState / moveFactor - player.state) * player.deltaX * moveFactor + 8,
-            player.y * tileSize + (maxState / moveFactor - player.state) * player.deltaY * moveFactor + 8
-        );
-        context.lineTo(
-            player.x * tileSize + (maxState / moveFactor - player.state) * player.deltaX * moveFactor + 8,
-            player.y * tileSize + (maxState / moveFactor - player.state) * player.deltaY * moveFactor + 0
-        );
-        context.stroke();
-        context.strokeStyle = oldStrokeStyle;
-        context.lineWidth = oldWidth;
+        drawPlayerGun(8, 0, "rgba(255, 140, 0, 1)");
+    }
+    if (myOrientation == 1) {
+        drawPlayerGun(0, 8, "rgba(255, 140, 0, 1)");
+    }
+    if (myOrientation == 2) {
+        drawPlayerGun(8, 16, "rgba(255, 140, 0, 1)");
+    }
+    if (myOrientation == 3) {
+        drawPlayerGun(16, 8, "rgba(255, 140, 0, 1)");
+    }
+}
+
+function drawPlayerGun(offsetX, offsetY, color) {
+    var oldStrokeStyle = context.strokeStyle;
+    context.strokeStyle = color;
+    var oldWidth = context.lineWidth;
+    context.lineWidth = 4;
+    context.beginPath();
+    context.moveTo(
+        player.x * tileSize + (maxState / moveFactor - player.state) * player.deltaX * moveFactor + 8,
+        player.y * tileSize + (maxState / moveFactor - player.state) * player.deltaY * moveFactor + 8
+    );
+    context.lineTo(
+        player.x * tileSize + (maxState / moveFactor - player.state) * player.deltaX * moveFactor + offsetX,
+        player.y * tileSize + (maxState / moveFactor - player.state) * player.deltaY * moveFactor + offsetY
+    );
+    context.stroke();
+    context.strokeStyle = oldStrokeStyle;
+    context.lineWidth = oldWidth;
+}
+
+function drawEnemy() {
+    context.fillStyle = "rgba(255, 140, 255, 1)";
+    context.fillRect(
+        player.x * tileSize + (maxState / moveFactor - player.state) * player.deltaX * moveFactor,
+        player.y * tileSize + (maxState / moveFactor - player.state) * player.deltaY * moveFactor,
+        tileSize,
+        tileSize
+    );
+    context.fillStyle = "rgba(0, 0, 0, 1)";
+    context.fillRect(
+        player.x * tileSize + (maxState / moveFactor - player.state) * player.deltaX * moveFactor + 2,
+        player.y * tileSize + (maxState / moveFactor - player.state) * player.deltaY * moveFactor + 2,
+        tileSize - 4,
+        tileSize - 4
+    );
+    if (enemyOrientation == 0) {
+        drawPlayerGun(8, 0, "rgba(255, 140, 0, 1)");
+    }
+    if (enemyOrientation == 1) {
+        drawPlayerGun(0, 8, "rgba(255, 140, 0, 1)");
+    }
+    if (enemyOrientation == 2) {
+        drawPlayerGun(8, 16, "rgba(255, 140, 0, 1)");
+    }
+    if (enemyOrientation == 3) {
+        drawPlayerGun(16, 8, "rgba(255, 140, 0, 1)");
     }
 }
 
@@ -412,6 +438,7 @@ Game.prototype.update = function () {
     drawBoard();
     movePlayer();
     drawPlayer();
+    drawEnemy();
     updateLumination();
     window.requestAnimationFrame(game.update);
 }
