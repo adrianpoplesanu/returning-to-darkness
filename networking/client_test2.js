@@ -58,7 +58,7 @@ function handleMessage(message) {
         myId = data.id;
         player.x = data.x;
         player.y = data.y;
-        myOrientation = data.playerOrientation;
+        myOrientation = data.orientation;
         enemy.x = data.enemyX;
         enemy.y = data.enemyY;
         enemy.orientation = data.enemyOrientation;

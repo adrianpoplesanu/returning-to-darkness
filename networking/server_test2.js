@@ -58,9 +58,9 @@ function handle_create_room(ws, code) {
 function handle_join_room(ws, code) {
     rooms[code].player2_ws = ws;
 
-    var spawnPoints = [{x1: 3, y1: 3, x2: 7, y2: 7}];
+    var spawnPoints = [{x1: 3, y1: 3, x2: 26, y2: 26}];
     var orientation1 = 1;
-    var orientation2 = 2;
+    var orientation2 = 3;
 
     const payload1 = {"state": "GAME_START", "code": code, "id": "player1", x: spawnPoints[0].x1, y: spawnPoints[0].y1, enemyX: spawnPoints[0].x2, enemyY: spawnPoints[0].y2, orientation: orientation1, enemyOrientation: orientation2};
     const payload2 = {"state": "GAME_START", "code": code, "id": "player2", x: spawnPoints[0].x2, y: spawnPoints[0].y2, enemyX: spawnPoints[0].x1, enemyY: spawnPoints[0].y1, orientation: orientation2, enemyOrientation: orientation1};
