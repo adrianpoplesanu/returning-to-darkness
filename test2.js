@@ -93,7 +93,7 @@ function handleInput() {
 
 function canMove(deltaX, deltaY) {
     if (player.state > 0) return false;
-    if (board[player.x + player.deltaX][player.y + player.deltaY].type == 0) return true;
+    if (board[player.x + deltaX][player.y + deltaY].type == 0) return true;
     return false;
 }
 
@@ -168,7 +168,7 @@ function testImageRendering(x, y, alpha) {
 
 function renderMargin(x, y, tileSize) {
     const img = document.getElementById("margin-tile");
-    context.globalAlpha = 0.12;
+    context.globalAlpha = 0.62;
     context.drawImage(img, x * tileSize, y * tileSize, 16, 16);
     context.globalAlpha = 1;
 }
@@ -294,6 +294,35 @@ function moveMyBullet() {
     if (myBullet.state == 0) {
         myBullet.x += myBullet.deltaX;
         myBullet.y += myBullet.deltaY;
+        if (myBullet.x + myBullet.deltaX > 0 &&
+            myBullet.x + myBullet.deltaX < boardWidth - 1 &&
+            myBullet.y + myBullet.deltaY > 0 &&
+            myBullet.y + myBullet.deltaY < boardHeight - 1) {
+            myBullet.state = 4;
+        } else {
+            myBullet.active = false;
+            isShooting = false;
+        }
+    }
+}
+
+function moveEnemyBullet() {
+    if (!enemyBullet.active) return;
+    if (enemyBullet.state > 0) {
+        enemyBullet.state--;
+    }
+    if (enemyBullet.state == 0) {
+        enemyBullet.x += enemyBullet.deltaX;
+        enemyBullet.y += enemyBullet.deltaY;
+        if (enemyBullet.x + enemyBullet.deltaX > 0 &&
+            enemyBullet.x + enemyBullet.deltaX < boardWidth - 1 &&
+            enemyBullet.y + enemyBullet.deltaY > 0 &&
+            enemyBullet.y + enemyBullet.deltaY < boardHeight - 1) {
+            enemyBullet.state = 4;
+        } else {
+            enemyBullet.active = false;
+            //isShooting = false;
+        }
     }
 }
 
@@ -377,32 +406,48 @@ function drawEnemy() {
 function drawMyBullet() {
     if (!myBullet.active) return;
     if(myBullet.orientation == 0) {
-        drwBullet(myBullet, 8, 0, "rgba(255, 140, 0, 1)");
+        drawBullet(myBullet, 8, 0, 8, 16, "rgba(255, 140, 0, 1)");
     }
     if(myBullet.orientation == 1) {
-        drwBullet(myBullet, 0, 8, "rgba(255, 140, 0, 1)");
+        drawBullet(myBullet, 0, 8, 16, 8, "rgba(255, 140, 0, 1)");
     }
     if(myBullet.orientation == 2) {
-        drwBullet(myBullet, 8, 16, "rgba(255, 140, 0, 1)");
+        drawBullet(myBullet, 8, 0, 8, 16, "rgba(255, 140, 0, 1)");
     }
     if(myBullet.orientation == 3) {
-        drwBullet(myBullet, 16, 8, "rgba(255, 140, 0, 1)");
+        drawBullet(myBullet, 0, 8, 16, 8, "rgba(255, 140, 0, 1)");
     }
 }
 
-function drawBullet(bullet, offsetX, offsetY, color) {
+function drawEnemyBullet() {
+    if (!enemyBullet.active) return;
+    if(enemyBullet.orientation == 0) {
+        drawBullet(enemyBullet, 8, 0, 8, 16, "rgba(255, 255, 255, 1)");
+    }
+    if(enemyBullet.orientation == 1) {
+        drawBullet(enemyBullet, 0, 8, 16, 8, "rgba(255, 255, 255, 1)");
+    }
+    if(enemyBullet.orientation == 2) {
+        drawBullet(enemyBullet, 8, 0, 8, 16, "rgba(255, 255, 255, 1)");
+    }
+    if(enemyBullet.orientation == 3) {
+        drawBullet(enemyBullet, 0, 8, 16, 8, "rgba(255, 255, 255, 1)");
+    }
+}
+
+function drawBullet(bullet, startX, startY, offsetX, offsetY, color) {
     var oldStrokeStyle = context.strokeStyle;
     context.strokeStyle = color;
     var oldWidth = context.lineWidth;
     context.lineWidth = 4;
     context.beginPath();
     context.moveTo(
-        bullet.x * tileSize + (maxState / moveFactor - bullet.state) * bullet.deltaX * moveFactor + 8,
-        bullet.y * tileSize + (maxState / moveFactor - bullet.state) * bullet.deltaY * moveFactor + 8
+        bullet.x * tileSize + (4 - bullet.state) * bullet.deltaX * 4 + startX, // TODO: fix this
+        bullet.y * tileSize + (4 - bullet.state) * bullet.deltaY * 4 + startY // TODO: fix this
     );
     context.lineTo(
-        bullet.x * tileSize + (maxState / moveFactor - bullet.state) * bullet.deltaX * moveFactor + offsetX,
-        bullet.y * tileSize + (maxState / moveFactor - bullet.state) * bullet.deltaY * moveFactor + offsetY
+        bullet.x * tileSize + (4 - bullet.state) * bullet.deltaX * 4 + offsetX, // TODO: fix this
+        bullet.y * tileSize + (4 - bullet.state) * bullet.deltaY * 4 + offsetY // TODO: fix this
     );
     context.stroke();
     context.strokeStyle = oldStrokeStyle;
@@ -466,31 +511,46 @@ function triggerShoot() {
         console.log("shooting");
         myBullet.x = player.x;
         myBullet.y = player.y;
+        myBullet.orientation = myOrientation;
         isShooting = true;
-        if (player.orientation == 0) {
+        if (myOrientation == 0) {
             myBullet.active = true;
             myBullet.deltaX = 0;
             myBullet.deltaY = -1;
             myBullet.state = 4; // TODO: fix this
         }
-        if (player.orientation == 0) {
+        if (myOrientation == 1) {
             myBullet.active = true;
             myBullet.deltaX = -1;
             myBullet.deltaY = 0;
             myBullet.state = 4; // TODO: fix this
         }
-        if (player.orientation == 0) {
+        if (myOrientation == 2) {
             myBullet.active = true;
             myBullet.deltaX = 0;
             myBullet.deltaY = 1;
             myBullet.state = 4; // TODO: fix this
         }
-        if (player.orientation == 0) {
+        if (myOrientation == 3) {
             myBullet.active = true;
             myBullet.deltaX = 1;
             myBullet.deltaY = 0;
             myBullet.state = 4; // TODO: fix this
         }
+        sendPlayerShoot(socket, roomCode, {
+            name: myId,
+            x: myBullet.x,
+            y: myBullet.y,
+            deltaX: myBullet.deltaX,
+            deltaY: myBullet.deltaY,
+            orientation: myBullet.orientation
+        });
+    }
+}
+
+function checkDead() {
+    if (player.x == enemyBullet.x && player.y == enemyBullet.y) {
+        console.log("dead");
     }
 }
 
@@ -575,9 +635,12 @@ Game.prototype.update = function () {
     movePlayer();
     moveEnemy();
     moveMyBullet();
+    moveEnemyBullet();
     drawPlayer();
     drawEnemy();
     drawMyBullet();
+    drawEnemyBullet();
+    checkDead();
     updateLumination();
     window.requestAnimationFrame(game.update);
 }

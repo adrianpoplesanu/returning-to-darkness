@@ -72,6 +72,22 @@ function handleMessage(message) {
         enemy.orientation = data.enemy.orientation;
         enemy.state = 8; // TODO: fix this
     }
+    if (data.state == 'SHOOT') {
+        enemyBullet.x = data.bullet.x;
+        enemyBullet.y = data.bullet.y;
+        enemyBullet.deltaX = data.bullet.deltaX;
+        enemyBullet.deltaY = data.bullet.deltaY;
+        enemyBullet.orientation = data.bullet.orientation;
+        enemyBullet.state = 8;
+        enemyBullet.active = true;
+    }
+    if (data.state == 'RESPAWN') {
+        player.x = data.player.x;
+        player.y = data.player.y;
+        player.deltaX = data.player.deltaX;
+        player.deltaY = data.player.deltaY;
+        myOrientation = data.player.orientation;
+    }
 }
 
 function generateUUID4() {

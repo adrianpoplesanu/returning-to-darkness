@@ -68,6 +68,70 @@ function handleUpdatePlayerState(room, data) {
     }
 }
 
+function handlePlayerShoot(room, data) {
+    var myId = data.name;
+    if (myId == "player1") {
+        var payload = {
+            state: "SHOOT",
+            bullet: {
+                name: "player1",
+                x: data.x,
+                y: data.y,
+                deltaX: data.deltaX,
+                deltaY: data.deltaY,
+                orientation: data.orientation
+            }
+        }
+        sendClientUpdate(room.player2_ws, payload);
+    }
+    if (myId == "player2") {
+        var payload = {
+            state: "SHOOT",
+            bullet: {
+                name: "player2",
+                x: data.x,
+                y: data.y,
+                deltaX: data.deltaX,
+                deltaY: data.deltaY,
+                orientation: data.orientation
+            }
+        }
+        sendClientUpdate(room.player1_ws, payload);
+    }
+}
+
+function handleDeadPlayer(room, data) {
+    var myId = data.name;
+    if (myId == "player1") {
+        var payload = {
+            state: "RESPAWN",
+            player: {
+                name: "player1",
+                x: 15,
+                y: 15,
+                deltaX: 0,
+                deltaY: 0,
+                orientation: 0
+            }
+        }
+        sendClientUpdate(room.player1_ws, payload);
+    }
+    if (myId == "player2") {
+        var payload = {
+            state: "RESPAWN",
+            player: {
+                name: "player2",
+                x: 15,
+                y: 15,
+                deltaX: 0,
+                deltaY: 0,
+                orientation: 0
+            }
+        }
+        sendClientUpdate(room.player2_ws, payload);
+    }
+}
+
 function sendClientUpdate(ws, payload) {
     ws.send(JSON.stringify(payload));
 }
@@ -76,4 +140,4 @@ function test() {
     console.log('server_game2.test()');
 }
 
-module.exports = { Game, Player, generateBoard, handleUpdatePlayerState };
+module.exports = { Game, Player, generateBoard, handleUpdatePlayerState, handlePlayerShoot, handleDeadPlayer };

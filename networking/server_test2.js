@@ -39,6 +39,12 @@ function handleMessage(ws, message) {
     if (data.state == 'UPDATE') {
         handle_update_room(ws, data);
     }
+    if (data.state == 'SHOOT') {
+        handle_player_shoot(ws, data);
+    }
+    if (data.state == 'DEAD') {
+        handle_dead_player(ws, data);
+    }
 }
 
 function handleClose(ws) {
@@ -72,8 +78,15 @@ function handle_join_room(ws, code) {
 
 function handle_update_room(ws, data) {
     const code = data.code;
-    //game.handleUpdatePlayerState(rooms[data.code].game, data.data);
     game.handleUpdatePlayerState(rooms[data.code], data.data);
+}
+
+function handle_player_shoot(ws, data) {
+    game.handlePlayerShoot(rooms[data.code], data.data);
+}
+
+function handle_dead_player(ws, data) {
+    game.handleDeadPlayer(rooms[data.code], data.data);
 }
 
 function sendMessage(ws, message) {
