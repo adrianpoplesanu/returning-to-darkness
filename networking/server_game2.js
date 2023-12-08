@@ -115,6 +115,7 @@ function handleDeadPlayer(room, data) {
             }
         }
         sendClientUpdate(room.player1_ws, payload);
+        sendClientUpdate(room.player2_ws, payload);
     }
     if (myId == "player2") {
         var payload = {
@@ -128,6 +129,7 @@ function handleDeadPlayer(room, data) {
                 orientation: 0
             }
         }
+        sendClientUpdate(room.player1_ws, payload);
         sendClientUpdate(room.player2_ws, payload);
     }
 }

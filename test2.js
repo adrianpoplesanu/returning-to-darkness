@@ -43,6 +43,7 @@ var myOrientation = 0; // 0 - up, 1 - left, 2 - down, 3 - right
 var keystate = {};
 
 var playerX, playerY, opponentX, opponentY, isShooting = false;
+var running = false;
 
 window.addEventListener("keydown", function(e) {
     // space and arrow keys
@@ -549,8 +550,14 @@ function triggerShoot() {
 }
 
 function checkDead() {
-    if (player.x == enemyBullet.x && player.y == enemyBullet.y) {
-        console.log("dead");
+    if (enemyBullet.active && player.x == enemyBullet.x && player.y == enemyBullet.y) {
+        console.log("i'm dead!!!");
+        myBullet.active = false;
+        enemyBullet.active = false;
+        isShooting = false;
+        sendPlayerDead(socket, roomCode, {
+            name: myId
+        });
     }
 }
 
@@ -630,18 +637,20 @@ Game.prototype.update = function () {
         gameObject.update();
     }
 
-    handleInput();
-    drawBoard();
-    movePlayer();
-    moveEnemy();
-    moveMyBullet();
-    moveEnemyBullet();
-    drawPlayer();
-    drawEnemy();
-    drawMyBullet();
-    drawEnemyBullet();
-    checkDead();
-    updateLumination();
+    if (running) {
+        handleInput();
+        drawBoard();
+        movePlayer();
+        moveEnemy();
+        moveMyBullet();
+        moveEnemyBullet();
+        drawPlayer();
+        drawEnemy();
+        drawMyBullet();
+        drawEnemyBullet();
+        checkDead();
+        updateLumination();
+    }
     window.requestAnimationFrame(game.update);
 }
 

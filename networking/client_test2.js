@@ -38,6 +38,11 @@ function sendPlayerShoot(socket, code, data) {
     socket.send(JSON.stringify(payload));
 }
 
+function sendPlayerDead(socket, code, data) {
+    const payload = {"state": "DEAD", "code": code, "data": data};
+    socket.send(JSON.stringify(payload));
+}
+
 function joinRoom(socket, code) {
     console.log("joining room");
     console.log(code);
@@ -62,6 +67,7 @@ function handleMessage(message) {
         enemy.x = data.enemyX;
         enemy.y = data.enemyY;
         enemy.orientation = data.enemyOrientation;
+        running = true;
     }
     if (data.state == 'UPDATE') {
         //console.log(data.enemy);
@@ -82,11 +88,22 @@ function handleMessage(message) {
         enemyBullet.active = true;
     }
     if (data.state == 'RESPAWN') {
-        player.x = data.player.x;
-        player.y = data.player.y;
-        player.deltaX = data.player.deltaX;
-        player.deltaY = data.player.deltaY;
-        myOrientation = data.player.orientation;
+        myBullet.active = false;
+        enemyBullet.active = false;
+        isShooting = false;
+        if (data.player.name == myId) {
+            player.x = data.player.x;
+            player.y = data.player.y;
+            player.deltaX = data.player.deltaX;
+            player.deltaY = data.player.deltaY;
+            myOrientation = data.player.orientation;
+        } else {
+            enemy.x = data.player.x;
+            enemy.y = data.player.y;
+            enemy.deltaX = data.player.deltaX;
+            enemy.deltaY = data.player.deltaY;
+            enemy.orientation = data.player.orientation;
+        }
     }
 }
 
