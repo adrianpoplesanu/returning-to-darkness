@@ -56,6 +56,7 @@ function handleMessage(message) {
         console.log(data.code);
         roomCode = data.code;
         myId = data.id;
+        populateCode(roomCode);
     }
     if (data.state == 'GAME_START') {
         console.log("start the game already");
@@ -68,6 +69,7 @@ function handleMessage(message) {
         enemy.y = data.enemyY;
         enemy.orientation = data.enemyOrientation;
         running = true;
+        startingGame();
     }
     if (data.state == 'UPDATE') {
         //console.log(data.enemy);

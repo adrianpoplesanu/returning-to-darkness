@@ -38,6 +38,14 @@ textarea:focus, input:focus{
   animation-iteration-count: infinite;
 }
 
+.copyright-text {
+  background: -webkit-linear-gradient(0deg, orange 0%, #212529 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: flicker 8s;
+  animation-iteration-count: infinite;
+}
+
 .button-text {
   background: -webkit-linear-gradient(0deg, #515559 0%, #212529 100%);
   -webkit-background-clip: text;

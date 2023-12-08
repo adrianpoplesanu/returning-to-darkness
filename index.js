@@ -1,6 +1,7 @@
 $(document).ready(function () {
     $("#create-room-btn").on('click', function () {
         console.log("create room btn");
+        createRoom(socket);
         $('.main-menu').hide();
         $('.room-created-menu').show();
     });
@@ -17,12 +18,23 @@ $(document).ready(function () {
 
     $("#join-btn").on('click', function () {
         console.log("join btn");
+        joinRoom(socket, $("#room-code").val());
     });
 
     $("#back-btn").on('click', function () {
         console.log("back btn");
         $('.join-room-menu').hide();
-        $("#room-name-input").val('');
+        $("#room-code").val('');
         $('.main-menu').show();
     });
 });
+
+function startingGame() {
+    $('.main-menu').hide();
+    $('.join-room-menu').hide();
+    $('.room-created-menu').hide();
+}
+
+function populateCode(code) {
+    $('#code-display').text(roomCode);
+}

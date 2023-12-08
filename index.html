@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Platformer fight</title>
+    <title>r e t u r n i n g t o d a r k n e s s</title>
     <script src="libs/jquery-3.7.1.js"></script>
     <link rel="stylesheet" href="libs/bootstrap.min.css"/>
     <link rel="stylesheet" href="index.css"/>
@@ -12,6 +12,11 @@
     </style>
 </head>
 <body>
+    <img style="display: none;" src="png/tile1.png" id="tile1"></img>
+    <img style="display: none;" src="png/tile2.png" id="tile2"></img>
+    <img style="display: none;" src="png/small-tile.png" id="small-tile1"></img>
+    <img style="display: none;" src="png/margin-tile.png" id="margin-tile"></img>
+
     <div class="center">
         <div class="container">
             <span class="title-text" style="font-size: 16px; color:#212529; user-select: none;">r e t u r n i n g t o d a r k n e s s</span>
@@ -32,23 +37,27 @@
             </div>
         </div>
         <div class="room-created-menu" style="display:none;">
-            <span class="title-text" style="font-size: 16px; color:#212529;">123</span>
+            <span class="title-text" style="font-size: 16px; color:#212529;" id="code-display">123</span>
         </div>
         <div class="join-room-menu" style="display:none;">
-            <input type="text" id="room-name-input"></input><br>
+            <input type="text" id="room-code"></input><br>
             <button type="button" class="button-text btn btn-outline-dark mt-1 fade-in-element" style="opacity: 0.8" id="join-btn">join</button>
             <button type="button" class="button-text btn btn-outline-dark mt-1 fade-in-element" style="opacity: 0.8" id="back-btn">back</button>
         </div>
-        <!-- <div class="container mt-3">
-            <span class="title-text" style="font-size: 10px; color:#212529; user-select: none;">Copyright(c) adrianus.ro, 2o23</span>
-        </div> -->
     </div>
-    <div class="game-zone" style="display:none;">
+    <div class="game-zone" style="width:100%;display: flex;justify-content: center;">
         <div id="game-output">
-            <canvas id="canvas" width="1020" height="780"></canvas>
+            <canvas id="canvas" width="480" height="480"></canvas>
         </div>
     </div>
+
+    <div class="container mt-3">
+        <span class="copyright-text" style="font-size: 10px; user-select: none;">Copyright(c) Adobe Garage Week, winter 2o23</span>
+    </div>
+
     <script src="index.js"></script>
-    <script src="game.js"></script>
+    <!-- <script src="game.js"></script> -->
+    <script src="networking/client_test2.js"></script>
+    <script src="test2.js"></script>
 </body>
 </html>
