@@ -16,24 +16,37 @@
         <div class="container">
             <span class="title-text" style="font-size: 16px; color:#212529; user-select: none;">r e t u r n i n g t o d a r k n e s s</span>
         </div>
-        <div>
-            <button type="button" class="button-text btn btn-outline-dark mt-3 fade-in-element" style="opacity: 0.4">single player</button>
+        <br><br>
+        <!-- <div>
+            <button type="button" class="button-text btn btn-outline-dark mt-3 fade-in-element" style="opacity: 0.6">single player</button>
+        </div> -->
+        <div class="main-menu">
+            <div class="container">
+                <button type="button" class="button-text btn btn-outline-dark mt-1 fade-in-element" style="opacity: 0.8" id="create-room-btn">create new room</button>
+            </div>
+            <div class="container">
+                <button type="button" class="button-text btn btn-outline-dark mt-1 fade-in-element" style="opacity: 0.8" id="join-room-btn">join room</button>
+            </div>
+            <div class="container">
+                <button type="button" class="button-text btn btn-outline-dark mt-1 fade-in-element" style="opacity: 0.8" id="how-to-play-btn">how to play</button>
+            </div>
         </div>
-        <div class="container">
-            <button type="button" class="button-text btn btn-outline-dark mt-1 fade-in-element" style="opacity: 0.4">create new room</button>
+        <div class="room-created-menu" style="display:none;">
+            <span class="title-text" style="font-size: 16px; color:#212529;">123</span>
         </div>
-        <div class="container">
-            <button type="button" class="button-text btn btn-outline-dark mt-1 fade-in-element" style="opacity: 0.4">join room</button>
+        <div class="join-room-menu" style="display:none;">
+            <input type="text" id="room-name-input"></input><br>
+            <button type="button" class="button-text btn btn-outline-dark mt-1 fade-in-element" style="opacity: 0.8" id="join-btn">join</button>
+            <button type="button" class="button-text btn btn-outline-dark mt-1 fade-in-element" style="opacity: 0.8" id="back-btn">back</button>
         </div>
-        <div class="container">
-            <button type="button" class="button-text btn btn-outline-dark mt-1 fade-in-element" style="opacity: 0.4">how to play</button>
-        </div>
-        <div class="container mt-3">
+        <!-- <div class="container mt-3">
             <span class="title-text" style="font-size: 10px; color:#212529; user-select: none;">Copyright(c) adrianus.ro, 2o23</span>
-        </div>
+        </div> -->
     </div>
-    <div id="game-output">
-        <canvas id="canvas" width="1020" height="780"></canvas>
+    <div class="game-zone" style="display:none;">
+        <div id="game-output">
+            <canvas id="canvas" width="1020" height="780"></canvas>
+        </div>
     </div>
     <script src="index.js"></script>
     <script src="game.js"></script>
