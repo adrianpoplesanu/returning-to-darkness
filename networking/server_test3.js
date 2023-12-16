@@ -1,4 +1,4 @@
-const game = require("./server_game2");
+const game = require("./server_game3");
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 9090 });
 
