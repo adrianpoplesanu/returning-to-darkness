@@ -1,6 +1,7 @@
 console.log("running client_test2.js...");
 
-const socket = new WebSocket("ws://localhost:9090");
+//const socket = new WebSocket("ws://localhost:9090");
+const socket = new WebSocket("ws://ec2-54-175-109-108.compute-1.amazonaws.com:9090");
 var roomCode;
 var myId;
 
