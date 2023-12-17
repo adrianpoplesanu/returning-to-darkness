@@ -33,4 +33,5 @@ function startingGame() {
 
 function populateCode(code) {
     $('#code-display').text(roomCode);
+    $('#code-display').show();
 }
