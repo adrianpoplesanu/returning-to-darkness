@@ -512,7 +512,20 @@ function canShoot() {
 }
 
 function lerpEnemy() {
-    // TODO: implement this
+    // TODO: implement thiis
+    var diffX = enemyTargetX - enemyX;
+    var diffY = enemyTargetY - enemyY;
+    if (diffX > 1) {
+        enemyX += diffX / 8;
+    } else {
+        enemyX = enemyTargetX;
+    }
+
+    if (diffY > 1) {
+        enemyY = diffY / 8;
+    } else {
+        enemyY = enemyTargetY;
+    }
 }
 
 function triggerShoot() {
