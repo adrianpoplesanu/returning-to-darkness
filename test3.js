@@ -38,6 +38,10 @@ var enemyDeltaX = 0;
 var enemyDeltaY = 0;
 var enemyState = 0;
 
+var enemyTargetX;
+var enemyTargetY;
+var lerpFactor;
+
 var myOrientation = 0; // 0 - up, 1 - left, 2 - down, 3 - right
 
 var keystate = {};
@@ -505,6 +509,10 @@ function triggerLumination() {
 
 function canShoot() {
     return !isShooting;
+}
+
+function lerpEnemy() {
+    // TODO: implement this
 }
 
 function triggerShoot() {
